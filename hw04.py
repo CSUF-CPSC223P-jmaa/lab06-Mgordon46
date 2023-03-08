@@ -65,12 +65,15 @@ def planet(mass):
     """Construct a planet of some mass."""
     assert mass > 0
     "*** YOUR CODE HERE ***"
+    return ['planet', mass]
+
 
 
 def mass(w):
     """Select the mass of a planet."""
     assert is_planet(w), 'must call mass on a planet'
     "*** YOUR CODE HERE ***"
+    return w[1]
 
 
 def is_planet(w):
@@ -127,6 +130,10 @@ def balanced(m):
     True
     """
     "*** YOUR CODE HERE ***"
+    if total_weight(left(m)) == total_weight(right(m)):
+        return True
+    else:
+        return False
 
 
 def totals_tree(m):
@@ -159,6 +166,18 @@ def totals_tree(m):
     True
     """
     "*** YOUR CODE HERE ***"
+    depth = 0
+    def helper(m,depth):
+        if is_mobile(m):
+          print(' ' * depth + total_weight(m))
+          if left(m):
+            helper(left(m), depth + 1)
+          elif right(m):
+              helper(right, depth + 1)
+          else:
+              return 0
+        if is_planet(m):
+            print(' ' * depth + total_weight(m))
 
 
 def replace_loki_at_leaf(t, lokis_replacement):
