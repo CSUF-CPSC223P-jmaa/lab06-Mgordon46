@@ -130,10 +130,14 @@ def balanced(m):
     True
     """
     "*** YOUR CODE HERE ***"
-    if total_weight(left(m)) == total_weight(right(m)):
+    if is_planet(m):
         return True
     else:
-        return False
+        lend = end(left(m))
+        rend = end(right(m))
+        left_t = length(left(m)) * total_weight(lend)
+        right_t = length(right(m)) * total_weight(rend)
+        return left_t == right_t and balanced(lend) and balanced(rend)
 
 
 def totals_tree(m):
@@ -166,18 +170,11 @@ def totals_tree(m):
     True
     """
     "*** YOUR CODE HERE ***"
-    depth = 0
-    def helper(m,depth):
-        if is_mobile(m):
-          print(' ' * depth + total_weight(m))
-          if left(m):
-            helper(left(m), depth + 1)
-          elif right(m):
-              helper(right, depth + 1)
-          else:
-              return 0
-        if is_planet(m):
-            print(' ' * depth + total_weight(m))
+    if is_planet(m):
+        return tree(mass(m))
+    else:
+        branches = [totals_tree(end(f(m)))for f in [left, right]]
+        return tree(sum([label(b) for b in branches]), branches)
 
 
 def replace_loki_at_leaf(t, lokis_replacement):
@@ -210,7 +207,11 @@ def replace_loki_at_leaf(t, lokis_replacement):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    if is_leaf(t) and label(t) == "loki":
+        return tree(lokis_replacement)
+    else:
+        con = [replace_loki_at_leaf(b, lokis_replacement) for b in branches(t)]
+        return tree(label(t), con)
 
 def has_path(t, word):
     """Return whether there is a path in a tree where the entries along the path
@@ -244,6 +245,14 @@ def has_path(t, word):
     """
     assert len(word) > 0, 'no path for empty word.'
     "*** YOUR CODE HERE ***"
+    if label(t) != word[0]:
+        return False
+    elif len(word) == 1:
+        return True
+    for b in branches(t):
+        if has_path(b, word[1:]):
+            return True
+    return False
 
 
 def str_interval(x):
